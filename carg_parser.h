@@ -39,47 +39,38 @@
     (without whitespace), or `--<long_option>=<argument>'.
 */
 
-typedef enum { ap_no, ap_yes, ap_maybe } ap_Has_arg;
+typedef enum {ap_no, ap_yes, ap_maybe} ap_Has_arg;
 
-typedef struct
-  {
+typedef struct {
   int code;			// Short option letter or code ( code != 0 )
-  const char * name;		// Long option name (maybe null)
+  const char *name;		// Long option name (maybe null)
   ap_Has_arg has_arg;
-  }
-ap_Option;
+} ap_Option;
 
-
-typedef struct
-  {
+typedef struct {
   int code;
-  char * argument;
-  }
-ap_Record;
+  char *argument;
+} ap_Record;
 
-
-typedef struct
-  {
-  ap_Record * data;
-  char * error;
+typedef struct {
+  ap_Record *data;
+  char *error;
   int data_size;
   int error_size;
-  }
-Arg_parser;
+} Arg_parser;
 
+char ap_init(Arg_parser *ap, const int argc, const char *const argv[],
+              const ap_Option options[], const char in_order);
 
-char ap_init( Arg_parser * ap, const int argc, const char * const argv[],
-              const ap_Option options[], const char in_order );
+void ap_free(Arg_parser *ap);
 
-void ap_free( Arg_parser * ap );
+const char *ap_error(const Arg_parser *ap);
 
-const char * ap_error( const Arg_parser * ap );
+// The number of arguments parsed (may be different from argc)
+int ap_arguments(const Arg_parser *ap );
 
-    // The number of arguments parsed (may be different from argc)
-int ap_arguments( const Arg_parser * ap );
+// If ap_code(i) is 0, ap_argument(i) is a non-option.
+// Else ap_argument(i) is the option's argument (or empty).
+int ap_code(const Arg_parser *ap, const int i);
 
-    // If ap_code( i ) is 0, ap_argument( i ) is a non-option.
-    // Else ap_argument( i ) is the option's argument (or empty).
-int ap_code( const Arg_parser * ap, const int i );
-
-const char * ap_argument( const Arg_parser * ap, const int i );
+const char *ap_argument(const Arg_parser *ap, const int i);

@@ -1,0 +1,1 @@
+ed -p=% // error by display =% instead of %
